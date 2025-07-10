@@ -1,10 +1,10 @@
-package ru.practicum;
+package ru.practicum.stats;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import ru.practicum.dto.EndpointHitDto;
 
 import java.time.LocalDateTime;
 
@@ -29,6 +29,14 @@ public class StatsEntry {
     private String ip;
 
     @Column(name = "created")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime timestamp;
+
+    public static StatsEntry fromDto(EndpointHitDto dto) {
+        StatsEntry entry = new StatsEntry();
+        entry.setApp(dto.getApp());
+        entry.setUri(dto.getUri());
+        entry.setIp(dto.getIp());
+        entry.setTimestamp(dto.getTimestamp());
+        return entry;
+    }
 }

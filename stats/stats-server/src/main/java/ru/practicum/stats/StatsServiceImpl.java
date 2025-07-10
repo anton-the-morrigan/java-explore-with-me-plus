@@ -1,12 +1,11 @@
-package ru.practicum.service;
+package ru.practicum.stats;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.Stat;
-import ru.practicum.StatsEntry;
-import ru.practicum.StatsRepository;
+import ru.practicum.dto.EndpointHitDto;
+import ru.practicum.dto.ViewStatsDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,19 +18,19 @@ public class StatsServiceImpl implements StatsService {
 
     @Override
     @Transactional
-    public StatsEntry hit(StatsEntry entryDto) {
+    public void saveHit(EndpointHitDto hitDto) {
         log.debug("Запрос на сохранение в статистику: app = {}, uri = {}, ip = {}, timestamp = {}",
-                entryDto.getApp(), entryDto.getUri(), entryDto.getIp(), entryDto.getTimestamp());
-        // TODO мапинг дто в сущность
-        repository.save(entryDto);
+                hitDto.getApp(), hitDto.getUri(), hitDto.getIp(), hitDto.getTimestamp());
 
-        log.info("Сохранена запись в статистику: app = {}, uri = {}, ip = {}, timestamp = {}",
-                entryDto.getApp(), entryDto.getUri(), entryDto.getIp(), entryDto.getTimestamp());
-        return entryDto;
+        StatsEntry entry = StatsEntry.fromDto(hitDto);
+        repository.save(entry);
+
+        log.info("Сохранена запись в статистику: id = {}, app = {}, uri = {}, ip = {}, timestamp = {}",
+                entry.getId(), entry.getApp(), entry.getUri(), entry.getIp(), entry.getTimestamp());
     }
 
     @Override
-    public List<Stat> getStats(LocalDateTime startTime, LocalDateTime endTime, List<String> uris, boolean unique) {
+    public List<ViewStatsDto> getStats(LocalDateTime startTime, LocalDateTime endTime, List<String> uris, boolean unique) {
         log.debug("Запрос на получение статистики c {} по {}, фильтр по uri: {}, уникальный ip: {}",
                 startTime, endTime, uris, unique);
 
