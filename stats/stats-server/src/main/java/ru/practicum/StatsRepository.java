@@ -8,14 +8,35 @@ import java.util.List;
 
 public interface StatsRepository extends JpaRepository<StatsEntry, Long> {
 
-/*    TODO:
-    1. Полная статистика
-    2. Статистика для указанных ip
-    3. Уникальность
-    */
-/*    @Query("""
-            select new ru.practicum.Stats(s.app, s.uri, count)
-            from StatsEntry as s group by s.uri
-            where s.created >= ?1 and s.created < ?2""")
-    List<StatsEntry> getStats(LocalDateTime start, LocalDateTime end);*/
+    @Query("""
+            select new ru.practicum.Stat(se.app, se.uri, count(se.ip))
+            from StatsEntry as se
+            where (se.timestamp >= ?1 and se.timestamp < ?2)
+            group by se.app, se.uri
+            order by count(se.ip) desc""")
+    List<Stat> getStats(LocalDateTime start, LocalDateTime end);
+
+    @Query("""
+            select new ru.practicum.Stat(se.app, se.uri, count(distinct se.ip))
+            from StatsEntry as se
+            where (se.timestamp >= ?1 and se.timestamp < ?2)
+            group by se.app, se.uri
+            order by count(distinct se.ip) desc""")
+    List<Stat> getStatsUniqueIp(LocalDateTime start, LocalDateTime end);
+
+    @Query("""
+            select new ru.practicum.Stat(se.app, se.uri, count(se.ip))
+            from StatsEntry as se
+            where (se.timestamp >= ?1 and se.timestamp < ?2 and se.uri in ?3)
+            group by se.app, se.uri
+            order by count(se.ip) desc""")
+    List<Stat> getStatsByUris(LocalDateTime start, LocalDateTime end, List<String> uris);
+
+    @Query("""
+            select new ru.practicum.Stat(se.app, se.uri, count(distinct se.ip))
+            from StatsEntry as se
+            where (se.timestamp >= ?1 and se.timestamp < ?2 and se.uri in ?3)
+            group by se.app, se.uri
+            order by count(DISTINCT se.ip) desc""")
+    List<Stat> getStatsByUrisUniqueIp(LocalDateTime start, LocalDateTime end, List<String> uris);
 }

@@ -78,7 +78,6 @@
             <artifactId>logbook-spring-boot-starter</artifactId>
             <version>${zalando.version}</version>
         </dependency>
-
     </dependencies>
 
 </project>

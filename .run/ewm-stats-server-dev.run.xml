@@ -2,7 +2,7 @@
   <configuration default="false" name="ewm-stats-server-dev" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="ru.practicum.StatsServer" />
     <module name="stats-server" />
-    <option name="PROGRAM_PARAMETERS" value="--spring.profiles.active=dev" />
+    <option name="PROGRAM_PARAMETERS" value="--spring.profiles.active=test" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

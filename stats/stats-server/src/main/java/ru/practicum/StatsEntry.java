@@ -1,12 +1,12 @@
 package ru.practicum;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 
 @Entity
 @Table(name = "stats")
@@ -29,5 +29,6 @@ public class StatsEntry {
     private String ip;
 
     @Column(name = "created")
-    private final LocalDateTime created = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime timestamp;
 }

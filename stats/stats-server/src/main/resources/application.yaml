@@ -6,10 +6,10 @@ spring:
 
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5433/statsdb
+    url: jdbc:postgresql://localhost:6542/statsdb
     username: dbuser
     password: 12345
 
 logging.level:
-  org.zalando.logbook: TRACE
-  ru.practicum.stats-server: INFO
+  ru.practicum: INFO
+  org.springframework.jdbc.datasource.init: DEBUG
