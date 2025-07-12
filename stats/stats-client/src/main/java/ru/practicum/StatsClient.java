@@ -1,11 +1,45 @@
 package ru.practicum;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
+import ru.practicum.dto.EndpointHitDto;
+import ru.practicum.dto.ViewStatsDto;
 
-@SpringBootApplication
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+@Component
+@RequiredArgsConstructor
 public class StatsClient {
-    public static void main(String[] args) {
-        SpringApplication.run(StatsClient.class, args);
+
+    private final RestTemplate restTemplate;
+
+    private static final String URL = "http://localhost:9090";
+
+    public void postHit(EndpointHitDto dto) {
+        restTemplate.postForEntity(URL + "/hit", dto, Void.class);
+    }
+
+    public List<ViewStatsDto> getStats(String start, String end, List<String> uris, boolean unique) throws RestClientException {
+
+        StringBuilder uri = new StringBuilder(URL).append("/stats")
+                .append("?start=").append(start)
+                .append("&end=").append(end)
+                .append("&unique=").append(unique);
+
+        if (!uris.isEmpty()) {
+            for (String uriStr : uris) {
+                uri.append("&uri=").append(uriStr);
+            }
+        }
+
+        ResponseEntity<ViewStatsDto[]> response = restTemplate.getForEntity(uri.toString(), ViewStatsDto[].class);
+
+        ViewStatsDto[] body = response.getBody();
+        return (body == null) ? new ArrayList<>() : Arrays.asList(body);
     }
 }
