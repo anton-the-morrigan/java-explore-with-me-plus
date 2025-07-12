@@ -1,9 +1,11 @@
 package ru.practicum.stats;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import ru.practicum.dto.EndpointHitDto;
 
 import java.time.LocalDateTime;
@@ -13,23 +15,24 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class StatsEntry {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
-    private Long id;
+    Long id;
 
     @Column(name = "app")
-    private String app;
+    String app;
 
     @Column(name = "uri")
-    private String uri;
+    String uri;
 
     @Column(name = "ip")
-    private String ip;
+    String ip;
 
     @Column(name = "created")
-    private LocalDateTime timestamp;
+    LocalDateTime timestamp;
 
     public static StatsEntry fromDto(EndpointHitDto dto) {
         StatsEntry entry = new StatsEntry();
