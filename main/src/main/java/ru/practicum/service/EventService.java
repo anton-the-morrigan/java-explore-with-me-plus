@@ -1,10 +1,9 @@
 package ru.practicum.service;
 
 import org.springframework.stereotype.Service;
-import ru.practicum.dto.event.EventFullDto;
-import ru.practicum.dto.event.EventShortDto;
-import ru.practicum.dto.event.UpdateEventAdminRequest;
+import ru.practicum.dto.event.*;
 import ru.practicum.params.EventAdminSearchParam;
+import ru.practicum.params.EventUserSearchParam;
 import ru.practicum.params.PublicEventSearchParam;
 
 import java.util.List;
@@ -16,7 +15,15 @@ public interface EventService {
 
     EventFullDto updateEventByAdmin(Long eventId, UpdateEventAdminRequest updateRequest);
 
-    List<EventShortDto> getEvents(PublicEventSearchParam param);
-
     EventFullDto getEventById(Long id);
+
+    List<EventShortDto> searchEvents(PublicEventSearchParam param);
+
+    List<EventShortDto> getUsersEvents(EventUserSearchParam param);
+
+    EventFullDto saveEvent(NewEventDto dto, Long userId);
+
+    EventFullDto getEventByIdAndUserId(Long userId, Long eventId);
+
+    EventFullDto updateEventByUser(Long userId, Long eventId, UpdateEventUserRequest updateRequest);
 }

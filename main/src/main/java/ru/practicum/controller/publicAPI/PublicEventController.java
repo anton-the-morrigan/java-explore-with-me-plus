@@ -9,6 +9,7 @@ import ru.practicum.dto.EndpointHitDto;
 import ru.practicum.dto.ViewStatsDto;
 import ru.practicum.dto.event.EventFullDto;
 import ru.practicum.dto.event.EventShortDto;
+import ru.practicum.exception.BadRequestException;
 import ru.practicum.params.PublicEventSearchParam;
 import ru.practicum.params.SortSearchParam;
 import ru.practicum.service.EventService;
@@ -38,7 +39,6 @@ public class PublicEventController {
             HttpServletRequest request) {
 
         if (rangeStart != null && rangeEnd != null && rangeStart.isAfter(rangeEnd)) {
-            // todo BadReqException
             throw new BadRequestException("End can't before start");
         }
         if (rangeEnd == null && rangeStart == null) {
