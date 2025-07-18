@@ -8,7 +8,7 @@ import ru.practicum.params.PublicEventSearchParam;
 
 import java.util.List;
 
-@Service
+
 public interface EventService {
 
     List<EventFullDto> getEventsByParams(EventAdminSearchParam param);

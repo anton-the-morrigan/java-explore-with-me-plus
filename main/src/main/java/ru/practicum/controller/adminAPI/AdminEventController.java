@@ -21,6 +21,7 @@ public class AdminEventController {
 
     private final EventService eventService;
 
+    @GetMapping
     public List<EventFullDto> getEventsByParams(
             @RequestParam(required = false) List<Long> users,
             @RequestParam(required = false) List<EventState> states,

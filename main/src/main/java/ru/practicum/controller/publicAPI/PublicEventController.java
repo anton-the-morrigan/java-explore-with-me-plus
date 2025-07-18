@@ -6,7 +6,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.StatsClient;
 import ru.practicum.dto.EndpointHitDto;
-import ru.practicum.dto.ViewStatsDto;
 import ru.practicum.dto.event.EventFullDto;
 import ru.practicum.dto.event.EventShortDto;
 import ru.practicum.exception.BadRequestException;
@@ -16,7 +15,6 @@ import ru.practicum.service.EventService;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 @RestController
 @RequestMapping("/events")
 @RequiredArgsConstructor
