@@ -6,7 +6,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.entity.Event;
 
-import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
@@ -14,11 +14,11 @@ import java.util.List;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class NewCompilationDto {
-    Boolean pinned;
-
     @NotBlank
     @Size(min = 1, max = 50)
     String title;
 
-    List<Event> events;
+    Boolean pinned;
+
+    Set<Event> events;
 }

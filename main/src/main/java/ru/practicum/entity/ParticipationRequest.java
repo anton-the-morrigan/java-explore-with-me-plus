@@ -30,9 +30,11 @@ public class ParticipationRequest {
     @JoinColumn(name = "event_id", nullable = false)
     private Event event;
 
+    @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private RequestStatus status;
 
+    @Column(name = "created")
     @CreationTimestamp
     private LocalDateTime created;
 }

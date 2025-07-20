@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/compilations")
 @RequiredArgsConstructor
-public class CompilationController {
+public class PublicCompilationController {
     private final CompilationService compilationService;
 
     @GetMapping

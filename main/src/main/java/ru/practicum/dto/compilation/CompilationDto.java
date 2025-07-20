@@ -5,7 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.entity.Event;
 
-import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
@@ -16,10 +16,10 @@ public class CompilationDto {
     Long id;
 
     @NotBlank
-    Boolean pinned;
-
-    @NotBlank
     String title;
 
-    List<Event> events;
+    @NotBlank
+    Boolean pinned;
+
+    Set<Event> events;
 }
