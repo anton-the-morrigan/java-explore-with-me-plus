@@ -1,9 +1,11 @@
-package ru.practicum.exception;
+package ru.practicum.error;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.practicum.error.exception.NotFoundException;
+import ru.practicum.error.exception.ValidationException;
 
 @RestControllerAdvice
 public class ErrorHandler {
@@ -11,6 +13,12 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotFoundException(final NotFoundException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleValidationException(final ValidationException e) {
         return new ErrorResponse(e.getMessage());
     }
 }

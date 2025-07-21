@@ -1,10 +1,7 @@
 package ru.practicum.controller.publicAPI;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.practicum.dto.compilation.CompilationDto;
 import ru.practicum.service.CompilationService;
 
@@ -17,8 +14,10 @@ public class PublicCompilationController {
     private final CompilationService compilationService;
 
     @GetMapping
-    public List<CompilationDto> getCompilations() {
-        return compilationService.getCompilations();
+    public List<CompilationDto> getCompilations(@RequestParam(defaultValue = "false") Boolean pinned,
+                                                @RequestParam(defaultValue = "0") Integer from,
+                                                @RequestParam(defaultValue = "10") Integer size) {
+        return compilationService.getCompilations(pinned, from, size);
     }
 
     @GetMapping("/{compId}")
