@@ -15,6 +15,7 @@ import ru.practicum.service.EventService;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 @RestController
 @RequestMapping("/events")
 @RequiredArgsConstructor

@@ -1,6 +1,5 @@
 package ru.practicum.service;
 
-import org.springframework.stereotype.Service;
 import ru.practicum.dto.event.*;
 import ru.practicum.params.EventAdminSearchParam;
 import ru.practicum.params.EventUserSearchParam;
