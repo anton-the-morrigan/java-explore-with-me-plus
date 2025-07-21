@@ -40,8 +40,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> getUsers(Integer from, Integer size) {
-        return userRepository.findAll(PageRequest.of(from, size)).stream().map(userMapper::toUserDto).collect(Collectors.toList());
+    public List<UserDto> getUsers(List<Long> ids, Integer from, Integer size) {
+        if (ids == null || ids.isEmpty()) {
+            return userRepository.findAll(PageRequest.of(from, size)).stream().map(userMapper::toUserDto).collect(Collectors.toList());
+        } else {
+            return userRepository.findAllByIdIn(ids, PageRequest.of(from, size)).stream().map(userMapper::toUserDto).collect(Collectors.toList());
+        }
     }
 
     private void userValidator(User user) {
