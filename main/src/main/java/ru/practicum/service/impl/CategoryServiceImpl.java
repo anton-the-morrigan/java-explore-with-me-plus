@@ -26,7 +26,7 @@ public class CategoryServiceImpl implements CategoryService {
             throw new ValidationException("Название категории не может быть null");
         }
         Category category = categoryMapper.toCategory(newCategoryDto);
-        CategoryValidator(category);
+        categoryValidator(category);
         categoryRepository.save(category);
         return categoryMapper.toCategoryDto(category);
     }
@@ -43,7 +43,7 @@ public class CategoryServiceImpl implements CategoryService {
         if (newCategoryDto.getEvents() != null) {
             category.setEvents(newCategoryDto.getEvents());
         }
-        CategoryValidator(category);
+        categoryValidator(category);
         categoryRepository.save(category);
         return categoryMapper.toCategoryDto(category);
     }
@@ -57,7 +57,7 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryMapper.toCategoryDto(category);
     }
 
-    private void CategoryValidator(Category category) {
+    private void categoryValidator(Category category) {
         if (category.getName().isBlank()) {
             throw new ValidationException("Название категории не может быть пустым");
         } else if (category.getName().length() > 50) {

@@ -26,7 +26,7 @@ public class CompilationServiceImpl implements CompilationService {
             throw new ValidationException("Название подборки не может быть null");
         }
         Compilation compilation = compilationMapper.toCompilation(newCompilationDto);
-        CompilationValidator(compilation);
+        compilationValidator(compilation);
         compilationRepository.save(compilation);
         return compilationMapper.toCompilationDto(compilation);
     }
@@ -46,7 +46,7 @@ public class CompilationServiceImpl implements CompilationService {
         if (newCompilationDto.getEvents() != null) {
             compilation.setEvents(newCompilationDto.getEvents());
         }
-        CompilationValidator(compilation);
+        compilationValidator(compilation);
         compilationRepository.save(compilation);
         return compilationMapper.toCompilationDto(compilation);
     }
@@ -60,7 +60,7 @@ public class CompilationServiceImpl implements CompilationService {
         return compilationMapper.toCompilationDto(compilation);
     }
 
-    private void CompilationValidator(Compilation compilation) {
+    private void compilationValidator(Compilation compilation) {
         if (compilation.getTitle().isBlank()) {
             throw new ValidationException("Название подборки не может быть пустым");
         } else if (compilation.getTitle().length() > 50) {
