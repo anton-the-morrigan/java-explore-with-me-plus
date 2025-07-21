@@ -21,7 +21,7 @@ public interface EventMapper {
     @Mapping(target = "location.lon", source = "location.lon")
     EventFullDto toFullDto(Event event);
 
-    @Mapping(target = "location", source = "location")
+    @Mapping(target = "location", source = "dto.location")
     @Mapping(target = "initiator", ignore = true)
     @Mapping(target = "category", ignore = true)
     @Mapping(target = "state", expression = "java(ru.practicum.entity.EventState.PENDING)")
