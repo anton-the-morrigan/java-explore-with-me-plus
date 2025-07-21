@@ -21,6 +21,7 @@ public class CompilationServiceImpl implements CompilationService {
     private final CompilationRepository compilationRepository;
     private final CompilationMapper compilationMapper;
 
+    @Override
     public CompilationDto addCompilation(NewCompilationDto newCompilationDto) {
         if (newCompilationDto.getTitle() == null) {
             throw new ValidationException("Название подборки не может быть null");
@@ -31,10 +32,12 @@ public class CompilationServiceImpl implements CompilationService {
         return compilationMapper.toCompilationDto(compilation);
     }
 
+    @Override
     public void deleteCompilation(Long compId) {
         compilationRepository.deleteById(compId);
     }
 
+    @Override
     public CompilationDto updateCompilation(Long compId, NewCompilationDto newCompilationDto) {
         Compilation compilation = compilationRepository.findById(compId).orElseThrow(() -> new NotFoundException("Подборка не найдена"));
         if (newCompilationDto.getTitle() != null) {
@@ -51,10 +54,12 @@ public class CompilationServiceImpl implements CompilationService {
         return compilationMapper.toCompilationDto(compilation);
     }
 
+    @Override
     public List<CompilationDto> getCompilations(Boolean pinned, Integer from, Integer size) {
         return compilationRepository.findByPinned(pinned, PageRequest.of(from, size)).stream().map(compilationMapper::toCompilationDto).collect(Collectors.toList());
     }
 
+    @Override
     public CompilationDto getCompilation(Long compId) {
         Compilation compilation = compilationRepository.findById(compId).orElseThrow(() -> new NotFoundException("Подборка не найдена"));
         return compilationMapper.toCompilationDto(compilation);

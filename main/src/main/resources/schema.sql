@@ -35,10 +35,10 @@ CREATE TABLE IF NOT EXISTS events (
     paid BOOLEAN NOT NULL,
     request_moderation BOOLEAN NOT NULL,
     participant_limit BIGINT  NOT NULL,
-    location_id BIGINT NOT NULL,
+    lat DOUBLE PRECISION,
+    lon DOUBLE PRECISION,
     FOREIGN KEY (category_id) REFERENCES categories (id),
-    FOREIGN KEY (initiator_id) REFERENCES users (id),
-    FOREIGN KEY (location_id) REFERENCES locations (id)
+    FOREIGN KEY (initiator_id) REFERENCES users (id)
 );
 
 CREATE TABLE IF NOT EXISTS participation_requests (

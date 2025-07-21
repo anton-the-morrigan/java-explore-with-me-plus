@@ -21,6 +21,7 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
 
+    @Override
     public CategoryDto addCategory(NewCategoryDto newCategoryDto) {
         if (newCategoryDto.getName() == null) {
             throw new ValidationException("Название категории не может быть null");
@@ -31,10 +32,12 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryMapper.toCategoryDto(category);
     }
 
+    @Override
     public void deleteCategory(Long catId) {
         categoryRepository.deleteById(catId);
     }
 
+    @Override
     public CategoryDto updateCategory(Long catId, NewCategoryDto newCategoryDto) {
         Category category = categoryRepository.findById(catId).orElseThrow(() -> new NotFoundException("Категория не найдена"));
         if (newCategoryDto.getName() != null) {
@@ -48,10 +51,12 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryMapper.toCategoryDto(category);
     }
 
+    @Override
     public List<CategoryDto> getCategories(Integer from, Integer size) {
         return categoryRepository.findAll(PageRequest.of(from, size)).stream().map(categoryMapper::toCategoryDto).collect(Collectors.toList());
     }
 
+    @Override
     public CategoryDto getCategory(Long catId) {
         Category category = categoryRepository.findById(catId).orElseThrow(() -> new NotFoundException("Категория не найдена"));
         return categoryMapper.toCategoryDto(category);
