@@ -13,8 +13,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CategoryDto {
-    Long id;
+public class NewCategoryDto {
 
     @NotBlank
     @Size(min = 1, max = 50)

@@ -1,16 +1,18 @@
 package ru.practicum.dto.user;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserShortDto {
-    private Long id;
+    @NotBlank
+    Long id;
 
-    private String name;
+    @NotBlank
+    String name;
 }
