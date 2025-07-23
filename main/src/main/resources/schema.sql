@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS events (
     initiator_id BIGINT NOT NULL,
     paid BOOLEAN NOT NULL,
     request_moderation BOOLEAN NOT NULL,
-    participant_limit BIGINT  NOT NULL,
+    participant_limit INTEGER  NOT NULL,
     lat DOUBLE PRECISION,
     lon DOUBLE PRECISION,
     FOREIGN KEY (category_id) REFERENCES categories (id),
