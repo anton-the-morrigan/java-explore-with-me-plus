@@ -2,6 +2,7 @@ package ru.practicum.controller.publicAPI;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.StatsClient;
@@ -14,8 +15,10 @@ import ru.practicum.params.SortSearchParam;
 import ru.practicum.service.EventService;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/events")
 @RequiredArgsConstructor
@@ -38,17 +41,19 @@ public class PublicEventController {
             HttpServletRequest request) {
 
         if (rangeStart != null && rangeEnd != null && rangeStart.isAfter(rangeEnd)) {
-            throw new BadRequestException("End can't before start");
+            throw new BadRequestException("rangeEnd can't before rangeStart");
         }
         if (rangeEnd == null && rangeStart == null) {
             rangeStart = LocalDateTime.now();
         }
 
+        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
         statsClient.postHit(EndpointHitDto.builder()
                 .app("ewm-main-service")
                 .uri(request.getRequestURI())
                 .ip(request.getRemoteAddr())
-                .timestamp(LocalDateTime.now())
+                .timestamp(timestamp)
                 .build());
 
         PublicEventSearchParam param = PublicEventSearchParam.builder()
@@ -64,17 +69,20 @@ public class PublicEventController {
                 .build();
 
         List<EventShortDto> events = eventService.searchEvents(param);
+
         return events;
     }
 
     @GetMapping("/{id}")
     public EventFullDto getEventById(@PathVariable Long id, HttpServletRequest request) {
 
+        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
         statsClient.postHit(EndpointHitDto.builder()
                 .app("ewm-main-service")
                 .uri(request.getRequestURI())
                 .ip(request.getRemoteAddr())
-                .timestamp(LocalDateTime.now())
+                .timestamp(timestamp)
                 .build());
 
         EventFullDto event = eventService.getEventById(id);

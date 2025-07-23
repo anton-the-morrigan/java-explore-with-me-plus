@@ -1,6 +1,7 @@
 package ru.practicum;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
@@ -18,7 +19,8 @@ public class StatsClient {
 
     private final RestTemplate restTemplate;
 
-    private static final String URL = "http://localhost:9090";
+    @Value("${stats.server.url}")
+    private String URL;
 
     public void postHit(EndpointHitDto dto) {
         restTemplate.postForEntity(URL + "/hit", dto, Void.class);

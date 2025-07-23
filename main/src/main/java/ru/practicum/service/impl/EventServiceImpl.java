@@ -12,6 +12,7 @@ import ru.practicum.entity.*;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.NotFoundException;
 import ru.practicum.mapper.EventMapper;
+import ru.practicum.mapper.LocationMapper;
 import ru.practicum.params.EventAdminSearchParam;
 import ru.practicum.params.EventUserSearchParam;
 import ru.practicum.params.PublicEventSearchParam;
@@ -41,6 +42,7 @@ public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
     private final ParticipationRequestRepository requestRepository;
     private final EventMapper eventMapper;
+    private final LocationMapper locationMapper;
     private final StatsClient statsClient;
 
     @Override
@@ -243,7 +245,11 @@ public class EventServiceImpl implements EventService {
         if (event.getDescription() != null) eventToUpdate.setDescription(event.getDescription());
         if (event.getEventDate() != null) eventToUpdate.setEventDate(event.getEventDate());
         if (event.getLocation() != null) {
-            eventToUpdate.setLocation(event.getLocation());
+            LocationDto locDto = event.getLocation();
+            Location loc = new Location();
+            loc.setLat(locDto.getLat());
+            loc.setLon(locDto.getLon());
+            eventToUpdate.setLocation(loc);
         }
         if (event.getPaid() != null) eventToUpdate.setPaid(event.getPaid());
         if (event.getParticipantLimit() != null) eventToUpdate.setParticipantLimit(event.getParticipantLimit());
@@ -257,7 +263,11 @@ public class EventServiceImpl implements EventService {
         if (event.getDescription() != null) eventToUpdate.setDescription(event.getDescription());
         if (event.getEventDate() != null) eventToUpdate.setEventDate(event.getEventDate());
         if (event.getLocation() != null) {
-            eventToUpdate.setLocation(event.getLocation());
+            LocationDto locDto = event.getLocation();
+            Location loc = new Location();
+            loc.setLat(locDto.getLat());
+            loc.setLon(locDto.getLon());
+            eventToUpdate.setLocation(loc);
         }
         if (event.getPaid() != null) eventToUpdate.setPaid(event.getPaid());
         if (event.getParticipantLimit() != null) eventToUpdate.setParticipantLimit(event.getParticipantLimit());

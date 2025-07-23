@@ -27,7 +27,7 @@ public class EventFullDto {
     private Long views;
     private LocalDateTime createdOn;
     private String description;
-    private Location location;
+    private LocationDto location;
     private Integer participantLimit;
     private LocalDateTime publishedOn;
     private Boolean requestModeration;
