@@ -9,10 +9,11 @@ import ru.practicum.entity.Category;
 public class CategoryMapper {
 
     public Category toCategory(NewCategoryDto newCategoryDto) {
-        return new Category(null, newCategoryDto.getName(), newCategoryDto.getEvents());
+        return new Category(null, newCategoryDto.getName());
     }
 
     public CategoryDto toCategoryDto(Category category) {
-        return new CategoryDto(category.getId(), category.getName(), category.getEvents());
+        return new CategoryDto(category.getId(), category.getName());
+
     }
 }

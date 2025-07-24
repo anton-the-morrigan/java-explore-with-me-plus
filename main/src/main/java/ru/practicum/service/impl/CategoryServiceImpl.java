@@ -43,9 +43,6 @@ public class CategoryServiceImpl implements CategoryService {
         if (newCategoryDto.getName() != null) {
             category.setName(newCategoryDto.getName());
         }
-        if (newCategoryDto.getEvents() != null) {
-            category.setEvents(newCategoryDto.getEvents());
-        }
         categoryValidator(category);
         categoryRepository.save(category);
         return categoryMapper.toCategoryDto(category);
