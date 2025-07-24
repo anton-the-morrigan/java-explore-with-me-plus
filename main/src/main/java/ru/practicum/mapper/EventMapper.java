@@ -11,14 +11,13 @@ import ru.practicum.entity.Event;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface EventMapper {
 
+
     @Mapping(target = "views", ignore = true)
     @Mapping(target = "confirmedRequests", ignore = true)
     EventShortDto toShortDto(Event event);
 
     @Mapping(target = "views", ignore = true)
     @Mapping(target = "confirmedRequests", ignore = true)
-    @Mapping(target = "location.lat", source = "location.lat")
-    @Mapping(target = "location.lon", source = "location.lon")
     EventFullDto toFullDto(Event event);
 
     @Mapping(target = "location", source = "dto.location")

@@ -27,7 +27,7 @@ public class UpdateEventRequest {
     @Future
     private LocalDateTime eventDate;
 
-    private Location location;
+    private LocationDto location;
 
     private Boolean paid;
 
