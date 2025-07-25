@@ -17,8 +17,10 @@ import ru.practicum.params.EventAdminSearchParam;
 import ru.practicum.params.EventUserSearchParam;
 import ru.practicum.params.PublicEventSearchParam;
 import ru.practicum.params.SortSearchParam;
+import ru.practicum.repository.CategoryRepository;
 import ru.practicum.repository.EventRepository;
 import ru.practicum.repository.ParticipationRequestRepository;
+import ru.practicum.repository.UserRepository;
 import ru.practicum.service.EventService;
 
 import java.time.LocalDateTime;
@@ -41,6 +43,8 @@ public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
     private final ParticipationRequestRepository requestRepository;
+    private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
     private final EventMapper eventMapper;
     private final LocationMapper locationMapper;
     private final StatsClient statsClient;
@@ -174,13 +178,30 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional
     public EventFullDto saveEvent(NewEventDto dto, Long userId) {
         log.info("Save event: {}", dto);
-        Event saved = eventRepository.saveAndFlush(eventMapper.toEntity(dto, userId));
-        EventFullDto fullDto = eventMapper.toFullDto(saved);
-        fullDto.setViews(0L);
-        fullDto.setConfirmedRequests(0L);
-        return fullDto;
+
+        Event event = eventMapper.toEntity(dto, userId);
+
+        Long categoryId = dto.getCategory().longValue();
+
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new NotFoundException("Категория с id=" + categoryId + " не найдена"));
+
+        User initiator = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Пользователь с id=" + userId + " не найден"));
+
+        event.setInitiator(initiator);
+        event.setCategory(category);
+
+        Event saved = eventRepository.saveAndFlush(event);
+
+        EventFullDto dtoResponse = eventMapper.toFullDto(saved);
+        dtoResponse.setViews(0L);
+        dtoResponse.setConfirmedRequests(0L);
+
+        return dtoResponse;
     }
 
     @Override

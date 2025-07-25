@@ -19,6 +19,4 @@ public class CategoryDto {
     @NotBlank
     @Size(min = 1, max = 50)
     String name;
-
-    Set<Event> events;
 }

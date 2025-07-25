@@ -20,7 +20,4 @@ public class Category {
 
     @Column(name = "name")
     private String name;
-
-    @OneToMany
-    private Set<Event> events = new LinkedHashSet<>();
 }

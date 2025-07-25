@@ -1,8 +1,11 @@
 package ru.practicum.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
 
@@ -41,7 +44,8 @@ public class Event {
     @Column(name = "published")
     private LocalDateTime publishedOn;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.RESTRICT)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
