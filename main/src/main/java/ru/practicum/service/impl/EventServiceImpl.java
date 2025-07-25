@@ -50,21 +50,21 @@ public class EventServiceImpl implements EventService {
     private final StatsClient statsClient;
 
     @Override
-    public List<EventFullDto> getEventsByParams(EventAdminSearchParam param) {
-        log.info("Get events by params: {}", param);
-        Page<Event> searched = eventRepository.findAll(eventAdminSearchParamSpec(param), param.getPageable());
+    public List<EventFullDto> getEventsByParams(EventAdminSearchParam params) {
+        log.debug("Get events by params: {}", params);
+
+        Page<Event> searched = eventRepository.findAll(eventAdminSearchParamSpec(params), params.getPageable());
 
         List<Long> eventIds = searched.stream()
-                .limit(param.getSize())
+                .limit(params.getSize())
                 .map(Event::getId)
                 .toList();
 
         Map<Long, Long> views = getViews(eventIds);
         Map<Long, Long> confirmed = requestRepository.countRequestsByEventIdsAndStatus(eventIds,
                 RequestStatus.CONFIRMED);
-
         return searched.stream()
-                .limit(param.getSize())
+                .limit(params.getSize())
                 .map(event -> {
                     EventFullDto dto = eventMapper.toFullDto(event);
                     dto.setConfirmedRequests(confirmed.get(dto.getId()) == null ? 0 : confirmed.get(dto.getId()));

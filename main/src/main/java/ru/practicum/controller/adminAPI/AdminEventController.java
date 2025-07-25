@@ -3,7 +3,6 @@ package ru.practicum.controller.adminAPI;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +26,7 @@ public class AdminEventController {
     @GetMapping
     public List<EventFullDto> getEventsByParams(
             @RequestParam(required = false) List<Long> users,
-            @RequestParam(required = false) List<EventState> states,
+            @RequestParam(name = "states", required = false) List<EventState> states,
             @RequestParam(required = false) List<Long> categories,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeStart,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeEnd,

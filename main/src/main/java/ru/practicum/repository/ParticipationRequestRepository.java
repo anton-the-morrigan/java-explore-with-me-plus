@@ -3,7 +3,6 @@ package ru.practicum.repository;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.practicum.entity.ParticipationRequest;
 import ru.practicum.entity.RequestStatus;
@@ -15,12 +14,12 @@ import java.util.stream.Collectors;
 @Repository
 public interface ParticipationRequestRepository extends JpaRepository<ParticipationRequest, Long> {
 
-    @Query("SELECT r.event.id, COUNT(r.id) " +
-            "FROM ParticipationRequest r " +
-            "WHERE r.event.id IN :eventIds AND r.status = :status " +
-            "GROUP BY r.event.id")
-    List<Object[]> countRequestsByStatus(@Param("eventIds") List<Long> eventIds,
-                                         @Param("status") RequestStatus status);
+    @Query("""
+            select r.event.id, count(r.id)
+            from ParticipationRequest r
+            where r.event.id in ?1 and r.status = ?2
+            group by r.event.id""")
+    List<Object[]> countRequestsByStatus(List<Long> ids, RequestStatus status);
 
     long countByEventIdAndStatus(Long eventId, RequestStatus status);
 
