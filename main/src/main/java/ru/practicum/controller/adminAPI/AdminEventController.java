@@ -26,7 +26,7 @@ public class AdminEventController {
     @GetMapping
     public List<EventFullDto> getEventsByParams(
             @RequestParam(required = false) List<Long> users,
-            @RequestParam(name = "states", required = false) List<EventState> states,
+            @RequestParam(required = false) List<EventState> states,
             @RequestParam(required = false) List<Long> categories,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeStart,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeEnd,

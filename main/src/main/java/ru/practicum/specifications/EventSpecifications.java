@@ -34,18 +34,6 @@ public class EventSpecifications {
         };
     }
 
-//    public static Specification<Event> states(List<EventState> states) {
-//        return (root, query, criteriaBuilder) -> {
-//            if (states == null || states.isEmpty()) {
-//                return criteriaBuilder.conjunction();
-//            }
-//            Path<String> statePath = root.get("state");
-//            return statePath.in(states.stream()
-//                    .map(Enum::name)
-//                    .collect(Collectors.toList()));
-//        };
-//    }
-
     public static Specification<Event> states(List<EventState> states) {
         return (root, query, criteriaBuilder) -> {
             if (states == null || states.isEmpty()) {
