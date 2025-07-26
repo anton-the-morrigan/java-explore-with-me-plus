@@ -50,21 +50,21 @@ public class EventServiceImpl implements EventService {
     private final StatsClient statsClient;
 
     @Override
-    public List<EventFullDto> getEventsByParams(EventAdminSearchParam param) {
-        log.info("Get events by params: {}", param);
-        Page<Event> searched = eventRepository.findAll(eventAdminSearchParamSpec(param), param.getPageable());
+    public List<EventFullDto> getEventsByParams(EventAdminSearchParam params) {
+        log.debug("Get events by params: {}", params);
+
+        Page<Event> searched = eventRepository.findAll(eventAdminSearchParamSpec(params), params.getPageable());
 
         List<Long> eventIds = searched.stream()
-                .limit(param.getSize())
+                .limit(params.getSize())
                 .map(Event::getId)
                 .toList();
 
         Map<Long, Long> views = getViews(eventIds);
         Map<Long, Long> confirmed = requestRepository.countRequestsByEventIdsAndStatus(eventIds,
                 RequestStatus.CONFIRMED);
-
         return searched.stream()
-                .limit(param.getSize())
+                .limit(params.getSize())
                 .map(event -> {
                     EventFullDto dto = eventMapper.toFullDto(event);
                     dto.setConfirmedRequests(confirmed.get(dto.getId()) == null ? 0 : confirmed.get(dto.getId()));
@@ -205,20 +205,25 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public EventFullDto getEventByIdAndUserId(Long userId, Long eventId) {
         log.info("Get event: {}", eventId);
 
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException("Событие не найдено"));
-        if (!Objects.equals(event.getInitiator().getId(), userId)) {
-            throw new ConflictException("Событие добавленно не теущем пользователем");
+
+        if (!event.getInitiator().getId().equals(userId)) {
+            throw new ConflictException("Событие добавлено не текущим пользователем");
         }
-        Map<Long, Long> confirmed = requestRepository.countRequestsByEventIdsAndStatus(List.of(event.getId()), RequestStatus.CONFIRMED);
-        Map<Long, Long> views = getViews(List.of(event.getId()));
+
+        Long confirmedRequests = requestRepository.countByEventIdAndStatus(eventId, RequestStatus.CONFIRMED);
+
+        Map<Long, Long> views = getViews(List.of(eventId));
+        Long viewsCount = views.getOrDefault(eventId, 0L);
 
         EventFullDto dto = eventMapper.toFullDto(event);
-        dto.setConfirmedRequests(confirmed.get(dto.getId()));
-        dto.setViews(views.get(dto.getId()));
+        dto.setConfirmedRequests(confirmedRequests != null ? confirmedRequests : 0L);
+        dto.setViews(viewsCount);
         return dto;
     }
 

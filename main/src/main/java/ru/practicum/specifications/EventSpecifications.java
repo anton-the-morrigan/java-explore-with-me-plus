@@ -39,10 +39,8 @@ public class EventSpecifications {
             if (states == null || states.isEmpty()) {
                 return criteriaBuilder.conjunction();
             }
-            Path<String> statePath = root.get("state");
-            return statePath.in(states.stream()
-                    .map(Enum::name)
-                    .collect(Collectors.toList()));
+            Path<EventState> statePath = root.get("state");
+            return statePath.in(states);
         };
     }
 
