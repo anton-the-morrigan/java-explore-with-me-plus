@@ -23,8 +23,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto addCategory(NewCategoryDto newCategoryDto) {
-        if (newCategoryDto.getName() == null) {
-            throw new ValidationException("Название категории не может быть null");
+        if (newCategoryDto.getName() == null || newCategoryDto.getName().isBlank()) {
+            throw new ValidationException("Название категории не может быть пустым");
         }
         Category category = categoryMapper.toCategory(newCategoryDto);
         categoryValidator(category);

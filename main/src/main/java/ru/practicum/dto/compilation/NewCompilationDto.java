@@ -4,7 +4,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.entity.Event;
 
 import java.util.Set;
 
@@ -20,5 +19,5 @@ public class NewCompilationDto {
 
     Boolean pinned;
 
-    Set<Event> events;
+    Set<Long> events;
 }

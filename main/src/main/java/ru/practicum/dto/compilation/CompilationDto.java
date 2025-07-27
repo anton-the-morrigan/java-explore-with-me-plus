@@ -3,7 +3,7 @@ package ru.practicum.dto.compilation;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.entity.Event;
+import ru.practicum.dto.event.EventShortDto;
 
 import java.util.Set;
 
@@ -21,5 +21,5 @@ public class CompilationDto {
     @NotBlank
     Boolean pinned;
 
-    Set<Event> events;
+    Set<EventShortDto> events;
 }
