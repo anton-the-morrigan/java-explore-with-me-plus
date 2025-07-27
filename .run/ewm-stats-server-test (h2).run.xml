@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="ewm-stats-server-dev" type="Application" factoryName="Application">
+  <configuration default="false" name="ewm-stats-server-test (h2)" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="ru.practicum.stats.StatsServer" />
     <module name="stats-server" />
     <option name="PROGRAM_PARAMETERS" value="--spring.profiles.active=test" />
