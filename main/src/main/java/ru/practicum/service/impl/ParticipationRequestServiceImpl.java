@@ -105,7 +105,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
         request.setEvent(event);
 
         if (requestRepository.existsByRequester(user)) {
-            throw new ConflictException("MEOW");
+            throw new ConflictException("This request already exists");
         }
 
         if (event.getParticipantLimit() == 0) {
