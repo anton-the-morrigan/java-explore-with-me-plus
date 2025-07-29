@@ -18,4 +18,3 @@ logging.level:
     orm.jpa.JpaTransactionManager: DEBUG
   org.zalando.logbook: TRACE
   ru.practicum: DEBUG
-
