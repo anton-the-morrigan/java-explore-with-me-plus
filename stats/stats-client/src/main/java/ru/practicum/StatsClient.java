@@ -19,8 +19,7 @@ public class StatsClient {
 
     private final RestTemplate restTemplate;
 
-    @Value("${stats.server.url}")
-    private String URL;
+    private static final String URL = "http://localhost:9090";
 
     public void postHit(EndpointHitDto dto) {
         restTemplate.postForEntity(URL + "/hit", dto, Void.class);

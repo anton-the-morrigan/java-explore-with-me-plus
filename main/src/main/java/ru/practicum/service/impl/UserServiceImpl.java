@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
         if (user.getEmail().substring(0, separator).length() > 64) {
             throw new BadRequestException("Локальная часть адреса электронной почты не может быть больше 64 символов");
         }
-        if (user.getEmail().substring(separator).length() > 64) {
+        if (user.getEmail().substring(separator).length() > 64 && user.getEmail().length() != 254) {
             throw new BadRequestException("Доменная часть адреса электронной почты не может быть больше 63 символов");
         }
     }
