@@ -75,6 +75,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional
     public EventFullDto updateEventByAdmin(Long eventId, UpdateEventAdminRequest updateRequest) {
         log.info("Update event: {}", updateRequest);
 
@@ -93,6 +94,7 @@ public class EventServiceImpl implements EventService {
 
         updateNotNullFields(event, updateRequest);
         event.setState(updateRequest.getStateAction() == AdminEventAction.PUBLISH_EVENT ? EventState.PUBLISHED : EventState.CANCELED);
+        event.setPublishedOn(LocalDateTime.now());
         Event updated = eventRepository.save(event);
 
         EventFullDto dto = eventMapper.toFullDto(updated);
@@ -205,25 +207,22 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public EventFullDto getEventByIdAndUserId(Long userId, Long eventId) {
+    public EventFullDto getEventByIdAndUserId(Long eventId, Long userId) {
         log.info("Get event: {}", eventId);
 
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException("Событие не найдено"));
 
-        if (!event.getInitiator().getId().equals(userId)) {
-            throw new ConflictException("Событие добавлено не текущим пользователем");
+        if (!Objects.equals(event.getInitiator().getId(), userId)) {
+            throw new ConflictException("Событие добавленно не теущем пользователем");
         }
 
-        Long confirmedRequests = requestRepository.countByEventIdAndStatus(eventId, RequestStatus.CONFIRMED);
-
-        Map<Long, Long> views = getViews(List.of(eventId));
-        Long viewsCount = views.getOrDefault(eventId, 0L);
+        Map<Long, Long> confirmed = requestRepository.countRequestsByEventIdsAndStatus(List.of(event.getId()), RequestStatus.CONFIRMED);
+        Map<Long, Long> views = getViews(List.of(event.getId()));
 
         EventFullDto dto = eventMapper.toFullDto(event);
-        dto.setConfirmedRequests(confirmedRequests != null ? confirmedRequests : 0L);
-        dto.setViews(viewsCount);
+        dto.setConfirmedRequests(confirmed.get(dto.getId()));
+        dto.setViews(views.get(dto.getId()));
         return dto;
     }
 
