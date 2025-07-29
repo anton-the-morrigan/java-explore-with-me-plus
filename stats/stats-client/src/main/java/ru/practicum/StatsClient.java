@@ -1,6 +1,5 @@
 package ru.practicum;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -19,21 +18,21 @@ public class StatsClient {
 
     private final RestTemplate restTemplate;
 
-    private final String URL;
+    private final String serverUrl;
 
     @Autowired
-    public StatsClient(RestTemplate restTemplate,@Value("${stats.server.url}") String URL) {
+    public StatsClient(RestTemplate restTemplate,@Value("${stats.server.url}") String serverUrl) {
         this.restTemplate = restTemplate;
-        this.URL = URL;
+        this.serverUrl = serverUrl;
     }
 
     public void postHit(EndpointHitDto dto) {
-        restTemplate.postForEntity(URL + "/hit", dto, Void.class);
+        restTemplate.postForEntity(serverUrl + "/hit", dto, Void.class);
     }
 
     public List<ViewStatsDto> getStats(String start, String end, List<String> uris, boolean unique) throws RestClientException {
 
-        StringBuilder uri = new StringBuilder(URL).append("/stats")
+        StringBuilder uri = new StringBuilder(serverUrl).append("/stats")
                 .append("?start=").append(start)
                 .append("&end=").append(end)
                 .append("&unique=").append(unique);
