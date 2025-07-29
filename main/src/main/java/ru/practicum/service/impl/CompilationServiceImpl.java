@@ -23,11 +23,8 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     public CompilationDto addCompilation(NewCompilationDto newCompilationDto) {
-        if (newCompilationDto.getTitle() == null) {
-            throw new ValidationException("Название подборки не может быть null");
-        }
+        compilationValidator(newCompilationDto);
         Compilation compilation = compilationMapper.toCompilation(newCompilationDto);
-        compilationValidator(compilation);
         compilationRepository.save(compilation);
         return compilationMapper.toCompilationDto(compilation);
     }
@@ -40,6 +37,7 @@ public class CompilationServiceImpl implements CompilationService {
     @Override
     public CompilationDto updateCompilation(Long compId, NewCompilationDto newCompilationDto) {
         Compilation compilation = compilationRepository.findById(compId).orElseThrow(() -> new NotFoundException("Подборка не найдена"));
+        compilationValidator(newCompilationDto);
         if (newCompilationDto.getTitle() != null) {
             compilation.setTitle(newCompilationDto.getTitle());
         }
@@ -47,9 +45,8 @@ public class CompilationServiceImpl implements CompilationService {
             compilation.setPinned(newCompilationDto.getPinned());
         }
         if (newCompilationDto.getEvents() != null) {
-            compilation.setEvents(newCompilationDto.getEvents());
+            compilation.setEvents(compilationMapper.eventIdsToEvents(newCompilationDto.getEvents()));
         }
-        compilationValidator(compilation);
         compilationRepository.save(compilation);
         return compilationMapper.toCompilationDto(compilation);
     }
@@ -65,11 +62,14 @@ public class CompilationServiceImpl implements CompilationService {
         return compilationMapper.toCompilationDto(compilation);
     }
 
-    private void compilationValidator(Compilation compilation) {
-        if (compilation.getTitle().isBlank()) {
+    private void compilationValidator(NewCompilationDto newCompilationDto) {
+        if (newCompilationDto.getTitle() == null || newCompilationDto.getTitle().isBlank()) {
             throw new ValidationException("Название подборки не может быть пустым");
-        } else if (compilation.getTitle().length() > 50) {
+        } else if (newCompilationDto.getTitle().length() > 50) {
             throw new ValidationException("Длина названия подборки не может быть больше 50 символов");
+        }
+        if (newCompilationDto.getPinned() == null) {
+            newCompilationDto.setPinned(false);
         }
     }
 }
