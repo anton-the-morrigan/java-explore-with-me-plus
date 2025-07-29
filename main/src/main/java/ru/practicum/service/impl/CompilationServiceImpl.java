@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 import ru.practicum.dto.compilation.CompilationDto;
 import ru.practicum.dto.compilation.NewCompilationDto;
 import ru.practicum.entity.Compilation;
-import ru.practicum.error.exception.NotFoundException;
-import ru.practicum.error.exception.ValidationException;
+import ru.practicum.exception.BadRequestException;
+import ru.practicum.exception.NotFoundException;
 import ru.practicum.mapper.CompilationMapper;
 import ru.practicum.repository.CompilationRepository;
 import ru.practicum.service.CompilationService;
@@ -37,7 +37,6 @@ public class CompilationServiceImpl implements CompilationService {
     @Override
     public CompilationDto updateCompilation(Long compId, NewCompilationDto newCompilationDto) {
         Compilation compilation = compilationRepository.findById(compId).orElseThrow(() -> new NotFoundException("Подборка не найдена"));
-        compilationValidator(newCompilationDto);
         if (newCompilationDto.getTitle() != null) {
             compilation.setTitle(newCompilationDto.getTitle());
         }
@@ -46,6 +45,9 @@ public class CompilationServiceImpl implements CompilationService {
         }
         if (newCompilationDto.getEvents() != null) {
             compilation.setEvents(compilationMapper.eventIdsToEvents(newCompilationDto.getEvents()));
+        }
+        if (compilation.getTitle().length() > 50) {
+            throw new BadRequestException("Название подборки не может быть пустым");
         }
         compilationRepository.save(compilation);
         return compilationMapper.toCompilationDto(compilation);
@@ -64,9 +66,9 @@ public class CompilationServiceImpl implements CompilationService {
 
     private void compilationValidator(NewCompilationDto newCompilationDto) {
         if (newCompilationDto.getTitle() == null || newCompilationDto.getTitle().isBlank()) {
-            throw new ValidationException("Название подборки не может быть пустым");
+            throw new BadRequestException("Название подборки не может быть пустым");
         } else if (newCompilationDto.getTitle().length() > 50) {
-            throw new ValidationException("Длина названия подборки не может быть больше 50 символов");
+            throw new BadRequestException("Длина названия подборки не может быть больше 50 символов");
         }
         if (newCompilationDto.getPinned() == null) {
             newCompilationDto.setPinned(false);

@@ -6,8 +6,9 @@ import org.springframework.stereotype.Service;
 import ru.practicum.dto.category.CategoryDto;
 import ru.practicum.dto.category.NewCategoryDto;
 import ru.practicum.entity.Category;
-import ru.practicum.error.exception.NotFoundException;
-import ru.practicum.error.exception.ValidationException;
+import ru.practicum.exception.BadRequestException;
+import ru.practicum.exception.ConflictException;
+import ru.practicum.exception.NotFoundException;
 import ru.practicum.mapper.CategoryMapper;
 import ru.practicum.repository.CategoryRepository;
 import ru.practicum.service.CategoryService;
@@ -24,7 +25,9 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto addCategory(NewCategoryDto newCategoryDto) {
         if (newCategoryDto.getName() == null || newCategoryDto.getName().isBlank()) {
-            throw new ValidationException("Название категории не может быть пустым");
+            throw new BadRequestException("Название категории не может быть пустым");
+        } else if (categoryRepository.existsByName(newCategoryDto.getName())) {
+            throw new ConflictException("Категория с таким названием уже существует");
         }
         Category category = categoryMapper.toCategory(newCategoryDto);
         categoryValidator(category);
@@ -40,8 +43,14 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto updateCategory(Long catId, NewCategoryDto newCategoryDto) {
         Category category = categoryRepository.findById(catId).orElseThrow(() -> new NotFoundException("Категория не найдена"));
+        if (category.getName().equals(newCategoryDto.getName())) {
+            return categoryMapper.toCategoryDto(category);
+        }
         if (newCategoryDto.getName() != null) {
             category.setName(newCategoryDto.getName());
+        }
+        if (categoryRepository.existsByName(newCategoryDto.getName())) {
+            throw new ConflictException("Категория с таким названием уже существует");
         }
         categoryValidator(category);
         categoryRepository.save(category);
@@ -61,9 +70,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     private void categoryValidator(Category category) {
         if (category.getName().isBlank()) {
-            throw new ValidationException("Название категории не может быть пустым");
+            throw new BadRequestException("Название категории не может быть пустым");
         } else if (category.getName().length() > 50) {
-            throw new ValidationException("Длина названия категории не может быть больше 50 символов");
+            throw new BadRequestException("Длина названия категории не может быть больше 50 символов");
         }
     }
 }
