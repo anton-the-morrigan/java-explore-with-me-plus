@@ -1,6 +1,11 @@
 server:
   port: 8080
 
+stats:
+  server:
+    url: ${STATS_SERVER_URL:http://localhost:9090}
+
+
 spring:
   output.ansi.enabled: ALWAYS # цветной вывод в консоль
   sql.init.mode: always
