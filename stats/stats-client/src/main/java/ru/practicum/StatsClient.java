@@ -1,6 +1,7 @@
 package ru.practicum;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -14,13 +15,17 @@ import java.util.Arrays;
 import java.util.List;
 
 @Component
-@RequiredArgsConstructor
 public class StatsClient {
 
     private final RestTemplate restTemplate;
 
-    @Value("${stats.server.url}")
-    private String URL;
+    private final String URL;
+
+    @Autowired
+    public StatsClient(RestTemplate restTemplate,@Value("${stats.server.url}") String URL) {
+        this.restTemplate = restTemplate;
+        this.URL = URL;
+    }
 
     public void postHit(EndpointHitDto dto) {
         restTemplate.postForEntity(URL + "/hit", dto, Void.class);
