@@ -1,9 +1,7 @@
 package ru.practicum.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
 
@@ -11,13 +9,14 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ApiError {
 
-    private String message;
+    String message;
 
-    private String reason;
+    String reason;
 
-    private String status;
+    String status;
 
-    private LocalDateTime timestamp;
+    LocalDateTime timestamp;
 }

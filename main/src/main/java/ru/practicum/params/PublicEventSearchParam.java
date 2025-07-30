@@ -1,6 +1,7 @@
 package ru.practicum.params;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -13,16 +14,17 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class PublicEventSearchParam {
-    private String text;
-    private List<Long> categories;
-    private Boolean paid;
-    private LocalDateTime rangeStart;
-    private LocalDateTime rangeEnd;
-    private Boolean onlyAvailable;
-    private SortSearchParam sort;
-    private Integer from;
-    private Integer size;
+    String text;
+    List<Long> categories;
+    Boolean paid;
+    LocalDateTime rangeStart;
+    LocalDateTime rangeEnd;
+    Boolean onlyAvailable;
+    SortSearchParam sort;
+    Integer from;
+    Integer size;
 
     public Pageable getPageable() {
         int page = from / size;

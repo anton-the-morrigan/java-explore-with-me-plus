@@ -1,8 +1,10 @@
 package ru.practicum.params;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.PageRequest;
 import ru.practicum.entity.EventState;
 import org.springframework.data.domain.Pageable;
@@ -13,20 +15,21 @@ import java.util.List;
 @Getter
 @Builder
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class EventAdminSearchParam {
-    private List<Long> users;
+    List<Long> users;
 
-    private List<EventState> states;
+    List<EventState> states;
 
-    private LocalDateTime rangeStart;
+    LocalDateTime rangeStart;
 
-    private LocalDateTime rangeEnd;
+    LocalDateTime rangeEnd;
 
-    private List<Long> categories;
+    List<Long> categories;
 
-    private Integer from;
+    Integer from;
 
-    private Integer size;
+    Integer size;
 
     public Pageable getPageable() {
         int page = from / size;

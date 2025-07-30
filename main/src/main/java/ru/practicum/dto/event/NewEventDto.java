@@ -13,14 +13,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class NewEventDto {
-    @NotNull
     @NotBlank
     @Size(min = 20, max = 2000)
     String annotation;
 
     Integer category;
 
-    @NotNull
     @NotBlank
     @Size(min = 20, max = 7000)
     String description;

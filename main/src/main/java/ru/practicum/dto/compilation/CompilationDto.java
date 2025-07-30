@@ -1,6 +1,7 @@
 package ru.practicum.dto.compilation;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.dto.event.EventShortDto;
@@ -18,7 +19,7 @@ public class CompilationDto {
     @NotBlank
     String title;
 
-    @NotBlank
+    @NotNull
     Boolean pinned;
 
     Set<EventShortDto> events;

@@ -26,14 +26,15 @@ public class PublicEventController {
 
     private final EventService eventService;
     private final StatsClient statsClient;
+    private final String dateTimePattern = "yyyy-MM-dd HH:mm:ss";
 
     @GetMapping
     public List<EventShortDto> getEvents(
             @RequestParam(required = false) String text,
             @RequestParam(required = false) List<Long> categories,
             @RequestParam(required = false) Boolean paid,
-            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeStart,
-            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeEnd,
+            @RequestParam(required = false) @DateTimeFormat(pattern = dateTimePattern) LocalDateTime rangeStart,
+            @RequestParam(required = false) @DateTimeFormat(pattern = dateTimePattern) LocalDateTime rangeEnd,
             @RequestParam(required = false) SortSearchParam sort,
             @RequestParam(defaultValue = "false") Boolean onlyAvailable,
             @RequestParam(defaultValue = "0") Integer from,
@@ -47,7 +48,7 @@ public class PublicEventController {
             rangeStart = LocalDateTime.now();
         }
 
-        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern(dateTimePattern));
 
         statsClient.postHit(EndpointHitDto.builder()
                 .app("ewm-main-service")
@@ -76,7 +77,7 @@ public class PublicEventController {
     @GetMapping("/{id}")
     public EventFullDto getEventById(@PathVariable Long id, HttpServletRequest request) {
 
-        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern(dateTimePattern));
 
         statsClient.postHit(EndpointHitDto.builder()
                 .app("ewm-main-service")
