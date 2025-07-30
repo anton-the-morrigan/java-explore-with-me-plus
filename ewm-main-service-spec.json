@@ -1988,7 +1988,7 @@
         ]
       }
     },
-    "/user/{userId}/subscribes": {
+    "/users/{userId}/subscribes": {
       "put": {
         "operationId": "addSubscribe",
         "parameters": [
@@ -2112,7 +2112,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/UserDto"
+                    "$ref": "#/components/schemas/UserShortDto"
                   }
                 }
               }
@@ -2125,7 +2125,7 @@
         ]
       }
     },
-    "/user/{userId}/events/feed": {
+    "/users/{userId}/events/feed": {
       "get": {
         "operationId": "getEventsFeed",
         "description": "В случае, если по заданным фильтрам не найдено ни одного события, возвращает пустой список",
