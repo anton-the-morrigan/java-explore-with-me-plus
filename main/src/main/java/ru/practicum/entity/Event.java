@@ -2,6 +2,7 @@ package ru.practicum.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -15,54 +16,55 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "events")
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long id;
 
     @Column(name = "title")
-    private String title;
+    String title;
 
     @Column(name = "annotation")
-    private String annotation;
+    String annotation;
 
     @Column(name = "description")
-    private String description;
+    String description;
 
     @Column(name = "state")
     @Enumerated(EnumType.STRING)
-    private EventState state;
+    EventState state;
 
     @Column(name = "event_date")
-    private LocalDateTime eventDate;
+    LocalDateTime eventDate;
 
     @Column(name = "created")
     @CreationTimestamp
-    private LocalDateTime createdOn;
+    LocalDateTime createdOn;
 
     @Column(name = "published")
-    private LocalDateTime publishedOn;
+    LocalDateTime publishedOn;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.RESTRICT)
     @JoinColumn(name = "category_id", nullable = false)
-    private Category category;
+    Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "initiator_id", nullable = false)
-    private User initiator;
+    User initiator;
 
     @Column(name = "paid")
-    private Boolean paid;
+    Boolean paid;
 
     @Column(name = "request_moderation")
-    private Boolean requestModeration;
+    Boolean requestModeration;
 
     @Column(name = "participant_limit")
-    private Integer participantLimit;
+    Integer participantLimit;
 
     @Embedded
-    private Location location;
+    Location location;
 }
 
 

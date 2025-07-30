@@ -2,6 +2,7 @@ package ru.practicum.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -15,26 +16,27 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "participation_requests")
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ParticipationRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "requester_id", nullable = false)
-    private User requester;
+    User requester;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "event_id", nullable = false)
-    private Event event;
+    Event event;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private RequestStatus status;
+    RequestStatus status;
 
     @Column(name = "created")
     @CreationTimestamp
-    private LocalDateTime created;
+    LocalDateTime created;
 }
