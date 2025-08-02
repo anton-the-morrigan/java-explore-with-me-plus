@@ -9,6 +9,7 @@ import lombok.experimental.FieldDefaults;
 import ru.practicum.dto.EndpointHitDto;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = "stats")
@@ -39,7 +40,6 @@ public class StatsEntry {
         entry.setApp(dto.getApp());
         entry.setUri(dto.getUri());
         entry.setIp(dto.getIp());
-        entry.setTimestamp(dto.getTimestamp());
-        return entry;
+        entry.setTimestamp(LocalDateTime.parse(dto.getTimestamp(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));        return entry;
     }
 }
