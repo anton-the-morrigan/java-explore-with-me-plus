@@ -2005,7 +2005,7 @@
           {
             "description": "id пользователя, на которого осуществляется подписка",
             "in": "query",
-            "name": "followedUserId",
+            "name": "followedToUserId",
             "required": true,
             "schema": {
               "type": "integer",
@@ -2055,7 +2055,7 @@
           {
             "description": "id пользователя, от которого осуществляется отписка",
             "in": "query",
-            "name": "followedUserId",
+            "name": "followedToUserId",
             "required": true,
             "schema": {
               "type": "integer",

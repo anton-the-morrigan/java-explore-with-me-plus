@@ -6,11 +6,11 @@ import ru.practicum.dto.user.UserShortDto;
 import java.util.List;
 
 public interface SubscribeService {
-    void createSubscribe(long userId, long followedUserId);
+    void createSubscribe(long followerUserId, long followedToUserId);
 
-    void deleteSubscribe(long userId, long followedUserId);
+    void deleteSubscribe(long followerUserId, long followedToUserId);
 
-    List<UserShortDto> getSubscribes(long userId);
+    List<UserShortDto> getSubscribes(long userId, int from, int size);
 
     List<EventShortDto> getEventsFeed(long userId);
 }
