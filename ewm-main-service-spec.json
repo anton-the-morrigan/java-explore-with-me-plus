@@ -2066,22 +2066,6 @@
         "responses": {
           "204": {
             "description": "Подписка удалена"
-          },
-          "404": {
-            "content": {
-              "application/json": {
-                "example": {
-                  "status": "NOT_FOUND",
-                  "reason": "The required object was not found.",
-                  "message": "User with id=27 was not found",
-                  "timestamp": "2022-09-07 09:10:50"
-                },
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            },
-            "description": "Пользователь не найден"
           }
         },
         "summary": "Удаление подписки на другого пользователя",
@@ -2101,6 +2085,29 @@
             "schema": {
               "type": "integer",
               "format": "int64"
+            }
+          },
+          {
+            "description": "количество событий, которые нужно пропустить для формирования текущего набора",
+            "in": "query",
+            "name": "from",
+            "required": false,
+            "schema": {
+              "minimum": 0,
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "description": "количество событий в наборе",
+            "in": "query",
+            "name": "size",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
             }
           }
         ],
