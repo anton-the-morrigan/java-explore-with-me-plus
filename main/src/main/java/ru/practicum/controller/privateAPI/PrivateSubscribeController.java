@@ -21,22 +21,23 @@ import java.util.List;
 public class PrivateSubscribeController {
     private final SubscribeService subscribeService;
     private final String dateTimePattern = "yyyy-MM-dd HH:mm:ss";
+    private final String subscribes = "/{userId}/subscribes";
 
-    @PutMapping("/{userId}/subscribes")
+    @PutMapping(subscribes)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void createSubscribe(@PathVariable @Positive long userId,
                                 @RequestParam @Positive long followedToUserId) {
         subscribeService.createSubscribe(userId, followedToUserId);
     }
 
-    @DeleteMapping("/{userId}/subscribes")
+    @DeleteMapping(subscribes)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteSubscribe(@PathVariable @Positive long userId,
                                 @RequestParam @Positive long followedToUserId) {
         subscribeService.deleteSubscribe(userId, followedToUserId);
     }
 
-    @GetMapping("/{userId}/subscribes")
+    @GetMapping(subscribes)
     public List<UserShortDto> getSubscribes(@PathVariable @Positive long userId,
                                             @RequestParam(defaultValue = "0") Integer from,
                                             @RequestParam(defaultValue = "10") Integer size) {

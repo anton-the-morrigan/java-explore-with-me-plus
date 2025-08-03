@@ -46,6 +46,9 @@ public class SubscribeServiceImpl implements SubscribeService {
     private final EventMapper eventMapper;
     private final StatsClient statsClient;
 
+    private final String startDate = "2000-01-01 00:00:00";
+    private final String endDate = "2100-01-01 00:00:00";
+
     @Override
     @Transactional
     public void createSubscribe(long followerUserId, long followedToUserId) {
@@ -99,8 +102,8 @@ public class SubscribeServiceImpl implements SubscribeService {
     private void connectViews(Collection<EventShortDto> events) {
         try {
             Map<Long, Long> views = statsClient.getStats(
-                    "2000-01-01 00:00:00",
-                    "2100-01-01 00:00:00",
+                    startDate,
+                    endDate,
                     events.stream().map(event -> "/events/" + event.getId()).toList(),
                     true)
                     .stream()
