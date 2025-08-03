@@ -10,19 +10,20 @@ import lombok.Setter;
 @Entity
 @NoArgsConstructor
 @Table(name = "subscribes")
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Subscribe {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "follower_user_id")
-    private User follower;
+    User follower;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "followed_to_user_id")
-    private User followedTo;
+    User followedTo;
 
     public Subscribe(User follower, User followedTo) {
         this.follower = follower;
