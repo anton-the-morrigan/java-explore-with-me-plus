@@ -8,6 +8,9 @@ import ru.practicum.dto.event.EventShortDto;
 import ru.practicum.dto.event.NewEventDto;
 import ru.practicum.entity.Event;
 
+import java.util.Collection;
+import java.util.List;
+
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = {CategoryMapperStruct.class, UserMapperStruct.class, LocationMapper.class})
 public interface EventMapper {
 
@@ -16,6 +19,8 @@ public interface EventMapper {
     @Mapping(target = "category", source = "event.category")
     @Mapping(target = "initiator", source = "event.initiator")
     EventShortDto toShortDto(Event event);
+
+    List<EventShortDto> toShortDto(Collection<Event> events);
 
     @Mapping(target = "views", ignore = true)
     @Mapping(target = "confirmedRequests", ignore = true)

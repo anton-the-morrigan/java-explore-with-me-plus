@@ -103,4 +103,16 @@ public class EventSpecifications {
                 .and(EventSpecifications.startAfter(params.getRangeStart()))
                 .and(EventSpecifications.states(List.of(EventState.PUBLISHED)));
     }
+
+    public static Specification<Event> eventFeedSearchParamSpec(List<Long> followedUsersIds,
+                                                                PublicEventSearchParam params) {
+
+        return Specification.where(EventSpecifications.userIdIs(followedUsersIds))
+                .and(EventSpecifications.textInAnnotationOrDescription(params.getText()))
+                .and(EventSpecifications.categories(params.getCategories()))
+                .and(EventSpecifications.isPaid(params.getPaid()))
+                .and(EventSpecifications.startAfter(params.getRangeStart()))
+                .and(EventSpecifications.startBefore(params.getRangeEnd()))
+                .and(EventSpecifications.states(List.of(EventState.PUBLISHED)));
+    }
 }
