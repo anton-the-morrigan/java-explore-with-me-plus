@@ -2,21 +2,37 @@ package ru.practicum.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.StatsClient;
+import ru.practicum.dto.ViewStatsDto;
 import ru.practicum.dto.event.EventShortDto;
 import ru.practicum.dto.user.UserShortDto;
+import ru.practicum.entity.Event;
+import ru.practicum.entity.RequestStatus;
 import ru.practicum.entity.Subscribe;
 import ru.practicum.entity.User;
 import ru.practicum.exception.NotFoundException;
+import ru.practicum.mapper.EventMapper;
 import ru.practicum.mapper.UserMapperStruct;
+import ru.practicum.params.PublicEventSearchParam;
+import ru.practicum.params.SortSearchParam;
 import ru.practicum.repository.EventRepository;
+import ru.practicum.repository.ParticipationRequestRepository;
 import ru.practicum.repository.SubscribeRepository;
 import ru.practicum.repository.UserRepository;
 import ru.practicum.service.SubscribeService;
 
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static ru.practicum.specifications.EventSpecifications.eventFeedSearchParamSpec;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +41,10 @@ public class SubscribeServiceImpl implements SubscribeService {
     private final SubscribeRepository subscribeRepository;
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
+    private final ParticipationRequestRepository requestRepository;
     private final UserMapperStruct userMapper;
+    private final EventMapper eventMapper;
+    private final StatsClient statsClient;
 
     @Override
     @Transactional
@@ -49,18 +68,61 @@ public class SubscribeServiceImpl implements SubscribeService {
     @Override
     public List<UserShortDto> getSubscribes(long userId, int from, int size) {
         log.debug("Запрос на получение подписок пользователя id = {}", userId);
-/*        List<Long> followedUsersIds = subscribeRepository.findSubscribesByFollower_IdIs(userId).stream()
-                .map(subscribe -> subscribe.getFollowedTo().getId()).toList();*/
         List<Long> followedUsersIds = subscribeRepository.findFollowedUsersIds(userId);
         List<User> users = userRepository.findAllByIdIn(followedUsersIds, PageRequest.of(from / size, size));
         return users.stream().map(userMapper::toShortDto).toList();
     }
 
     @Override
-    public List<EventShortDto> getEventsFeed(long userId) {
-        log.debug("Запрос на получение ленты событий пользователя id = {}", userId);
+    public List<EventShortDto> getEventsFeed(long userId, PublicEventSearchParam param) {
+        log.debug("Запрос на получение ленты событий пользователя id = {}, params: {}", userId, param);
         List<Long> followedUsersIds = subscribeRepository.findFollowedUsersIds(userId);
-        return null;
+        Page<Event> eventsPage = eventRepository.findAll(eventFeedSearchParamSpec(followedUsersIds, param), param.getPageable());
+        Map<Long, Event> eventsMap = eventsPage.stream().collect(Collectors.toMap(Event::getId, Function.identity()));
+
+        List<EventShortDto> events = eventMapper.toShortDto(eventsPage.toList());
+        connectViews(events);
+        connectConfirmedRequests(events);
+        if (param.getOnlyAvailable()) {
+            events = events.stream().filter(event -> {
+                Integer limit = eventsMap.get(event.getId()).getParticipantLimit();
+                Long participants = event.getConfirmedRequests();
+                return participants < limit;
+            }).toList();
+        }
+        if (SortSearchParam.VIEWS.equals(param.getSort())) {
+            events = events.stream().sorted(Comparator.comparingLong(EventShortDto::getViews).reversed()).toList();
+        }
+        return events;
+    }
+
+    private void connectViews(Collection<EventShortDto> events) {
+        try {
+            Map<Long, Long> views = statsClient.getStats(
+                    "2000-01-01 00:00:00",
+                    "2100-01-01 00:00:00",
+                    events.stream().map(event -> "/events/" + event.getId()).toList(),
+                    true)
+                    .stream()
+                    .filter(statDto -> statDto.getUri().matches("^/events/\\d+$"))
+                    .collect(Collectors.toMap(statDto ->
+                            Long.parseLong(statDto.getUri().replace("/events/", "")),
+                            ViewStatsDto::getHits)
+                    );
+
+            events.forEach(event -> event.setViews(views.getOrDefault(event.getId(), 0L)));
+        } catch (Exception e) {
+            log.warn("Ошибка получения статистики просмотров", e);
+        }
+    }
+
+    private void connectConfirmedRequests(Collection<EventShortDto> events) {
+        Map<Long, Long> confirmed = requestRepository.countRequestsByEventIdsAndStatus(
+                events.stream().map(EventShortDto::getId).toList(),
+                RequestStatus.CONFIRMED);
+
+        events.forEach(event ->
+                event.setConfirmedRequests(confirmed.getOrDefault(event.getId(), 0L)));
     }
 
     private User getUserOrElseThrow(long userId) {
