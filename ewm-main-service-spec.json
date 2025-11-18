@@ -47,6 +47,10 @@
     {
       "description": "API для работы с подборками событий",
       "name": "Admin: Подборки событий"
+    },
+    {
+      "description": "Закрытый API для работы с подпискамии",
+      "name": "Private: Подписки"
     }
   ],
   "paths": {
@@ -1981,6 +1985,300 @@
         "summary": "Отмена своего запроса на участие в событии",
         "tags": [
           "Private: Запросы на участие"
+        ]
+      }
+    },
+    "/users/{userId}/subscribes": {
+      "put": {
+        "operationId": "addSubscribe",
+        "parameters": [
+          {
+            "description": "id пользователя, который осуществляет подписку",
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "description": "id пользователя, на которого осуществляется подписка",
+            "in": "query",
+            "name": "followedToUserId",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Подписка добавлена"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "NOT_FOUND",
+                  "reason": "The required object was not found.",
+                  "message": "User with id=27 was not found",
+                  "timestamp": "2022-09-07 09:10:50"
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description": "Пользователь не найден"
+          }
+        },
+        "summary": "Добавление подписки на другого пользователя",
+        "tags": [
+          "Private: Подписки"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteSubscribe",
+        "parameters": [
+          {
+            "description": "id пользователя, который осуществляет отписку",
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "description": "id пользователя, от которого осуществляется отписка",
+            "in": "query",
+            "name": "followedToUserId",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Подписка удалена"
+          }
+        },
+        "summary": "Удаление подписки на другого пользователя",
+        "tags": [
+          "Private: Подписки"
+        ]
+      },
+      "get": {
+        "operationId": "getSubscribes",
+        "description": "В случае, если подписок нет, возвращает пустой список",
+        "parameters": [
+          {
+            "description": "id пользователя",
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "description": "количество событий, которые нужно пропустить для формирования текущего набора",
+            "in": "query",
+            "name": "from",
+            "required": false,
+            "schema": {
+              "minimum": 0,
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "description": "количество событий в наборе",
+            "in": "query",
+            "name": "size",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Подписки найдены",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserShortDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Получение списка пользователей, на которых осуществлена подписка",
+        "tags": [
+          "Private: Подписки"
+        ]
+      }
+    },
+    "/users/{userId}/events/feed": {
+      "get": {
+        "operationId": "getEventsFeed",
+        "description": "В случае, если по заданным фильтрам не найдено ни одного события, возвращает пустой список",
+        "parameters": [
+          {
+            "description": "id пользователя",
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "description": "текст для поиска в содержимом аннотации и подробном описании события",
+            "in": "query",
+            "name": "text",
+            "required": false,
+            "schema": {
+              "maxLength": 7000,
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          {
+            "description": "список идентификаторов категорий в которых будет вестись поиск",
+            "in": "query",
+            "name": "categories",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int64"
+              }
+            }
+          },
+          {
+            "description": "поиск только платных/бесплатных событий",
+            "in": "query",
+            "name": "paid",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "дата и время не раньше которых должно произойти событие",
+            "in": "query",
+            "name": "rangeStart",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "дата и время не позже которых должно произойти событие",
+            "in": "query",
+            "name": "rangeEnd",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "только события у которых не исчерпан лимит запросов на участие",
+            "in": "query",
+            "name": "onlyAvailable",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "description": "Вариант сортировки: по дате события или по количеству просмотров",
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "EVENT_DATE",
+                "VIEWS"
+              ]
+            }
+          },
+          {
+            "description": "количество событий, которые нужно пропустить для формирования текущего набора",
+            "in": "query",
+            "name": "from",
+            "required": false,
+            "schema": {
+              "minimum": 0,
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "description": "количество событий в наборе",
+            "in": "query",
+            "name": "size",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Лента событий найдена",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventShortDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Запрос составлен некорректно",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "BAD_REQUEST",
+                  "reason": "Incorrectly made request.",
+                  "message": "Event must be published",
+                  "timestamp": "2022-09-07 09:10:50"
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Получение списка событий от пользователей, на которых осуществлена подписка, с возможностью фильтрации",
+        "tags": [
+          "Private: Подписки"
         ]
       }
     }
